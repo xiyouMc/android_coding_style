@@ -1,0 +1,381 @@
+#源代码文件#
+
+----------
+ 
+1. 文件命名  
+   以本文件中最顶级class名加上.java后缀命名，且大小写敏感  
+2. 文件编码  
+   UTF-8
+3. 特殊字符  
+   2.1 空白字符  
+    只允许ascii水平空白符(0x20)  
+
+4. 文件组织  
+   一般，一份源代码文件按照如下结构组织：  
+   a) 授权、版权信息，如果有  
+   b) 包声明  
+   c) 导入声明  
+   d) 只包含一个顶级类  
+    并以一个空白行分隔以上每部分  
+
+  1. 包声明  
+        包声明不要进行行截断(见段4.5)，每行最多100列的限制不会施加于包声明  
+
+  2. 导入声明  
+    导入声明不要进行行截断（见段4.5），每行最多100列的限制不会施加于导入声明  
+    导入声明按以下规则分组： 
+    所有static导入为一组  
+    第三方的，按照顶级包的字母序排列，例如：android, com, junit, org, sun  
+    java， javax打头的  
+    组内按照字母序排序  
+    不要使用通配符式导入，而是使用完全限定名称的类  
+    推荐：`import foo.Bar;`（优点是显式指定了特定的类）  
+    不推荐：`import foo.*;`（优点是少写import声明，但是可读性差，且给维护者带来了代价）  
+        
+  3. 类声明  
+     1. 每源代码有且仅有一个顶级类  
+     2. 成员函数的排列顺序  
+        一般应该按照逻辑集中的规则来排列（例如操作同一数据的方法尽量放在一起），而不要是新近添加的方法总是放在最后  
+     3. 重载的多个函数应该连续排列  
+5. 格式  
+    术语：块级结构指：类、方法、构造方法体（若数组以语句块的形式初始化，也视为块级结构）  
+      
+  1. 花括号  
+    花括号应该与if, else, for, do, while语句一起使用，即便其内容为空或只包含单行语句  
+      
+  2. 非空语句块采用K&R风格  
+     对于非空语句块，花括号遵循K&R风格  
+     a、左括号前不换行  
+     b、左括号后换行  
+     c、右括号前换行  
+     d、如果右括号结束一个语句块或者函数体、构造函数体或者有命名的类体，则需要换行。但当右括号后面接else或者逗号时，不应该换行  
+     例如： 
+     ```java
+          return new MyClass() {
+              @Override public void method() {
+                if (condition()) {
+                  try {
+                    something();
+                  } catch (ProblemException e) {
+                    recover();
+                  }
+                }
+              }
+            };
+    ```
+   3. 空白块级结构使用场景  
+        方法体为空，或空的构造方法(一个空的语句块，可以在左花括号之后直接接右花括号，中间不需要空格或换行，使代码更简洁)  
+        例如：  
+        ```java
+        void doNothing() {}
+        class EmptyConstruct {
+        public EmptyConstruct() {}
+        }```
+        
+    4. 块级缩进  
+    4个空白字符（同时适用于代码和注释）  
+    
+    5. 一条语句占一行  
+    
+    6. 列数限制  
+        任何行超出100列长度的行应该进行断行（见段6）  
+        例外：  
+        1. 没法遵循以上限制，比如JavaDoc中很长的URL，或一个很长的JSNI方法引用  
+        2. 包声明，导入声明  
+        3. 可以被直接拷贝粘贴到shell中的命令  
+    
+    7. 断行  
+        术语说明：当一行代码按照其他规范都合法，只是为了避免超出行长度限制而换行时，称为长行断行  
+        
+        1. 在何处进断行  
+        一个原则：尽可能选择在更高的句法级别上进断行，且：  
+            1. 若遇到非赋值操作符，则在该符号前截断。这条规则同样适用于点操作符的.，类型组合符（<T extends Foo & Bar>），catch块中的管道线（catch (FooException | BarException e)）
+            2. 若遇到赋值操作符，则在该符号后截断。这条规则同样适用于类赋值操作符（foreach 语句中的:），例如：  
+```java
+            IAccessibilityServiceConnection connection =
+                AccessibilityInteractionClient.getInstance().getConnection(mConnectionId);
+            IAccessibilityServiceConnection connection = AccessibilityInteractionClient
+                    .getInstance().getConnection(mConnectionId);
+```
+            3. 方法名或构造方法名与跟随其后的开括号保持连续
+            4. `,`紧跟它之前的符号
+            
+        2. 缩进后续行最低4个空白字符（建议8个空白字符）  
+            截断后的后续行（即不包含第一行）相对原始行最低缩进4个（建议8个）空白字符，多个后续行的情形下，若他们属于同一层的句法元素，则应保持相同的缩进级别
+            
+        3. 空白字符  
+           1. 垂直空白
+              单行空行在以下情况使用：  
+a、类成员间需要空行隔开：例如成员变量、构造函数、成员函数、内部类、静态初始化语句块（static initializers）、实例初始化语句块（instance initializers）。
+    例外：成员变量之间的空白行不是必需的。一般多个成员变量中间的空行，是为了对成员变量做逻辑上的分组。  
+b、在函数内部，根据代码逻辑分组的需要，设置空白行作为间隔。  
+c、类的第一个成员之前，或者最后一个成员结束之后，用空行间隔。（可选）  
+d、本文档中其他部分介绍的需要空行的情况。（例如 3.3节中的import语句） 
+单空行时使用多行空行是允许的，但是不要求也不鼓励。   
+           2. 水平空白  
+              除了语法、其他规则、词语分隔、注释和javadoc外，水平的ASCII空格只在以下情况出现：
+a、所有保留的关键字与紧接它之后的位于同一行的左括号之间需要用空格隔开。（例如if、for、catch）  
+b、所有保留的关键字与在它之前的右花括号之间需要空格隔开。（例如else、catch）  
+c、在左花括号之前都需要空格隔开。只有两种例外：
+    @SomeAnnotation({a, b})
+  String[][] x = {{"foo"}};  
+d、所有的二元运算符和三元运算符的两边，都需要空格隔开。  
+e、逗号、冒号、分号和右括号之后，需要空格隔开。  
+f、// 双斜线开始一行注释时。双斜线两边都应该用空格隔开。并且可使用多个空格，但是不做强制要求。  
+g、变量声明时，变量类型和变量名之间需要用空格隔开。  
+h、初始化一个数组时，花括号之间可以用空格隔开，也可以不使用。（例如：new int[] {5, 6} 和 new int[] { 5, 6 } 都可以）  
+注意：这一原则不影响一行开始或者结束时的空格。只针对行内部字符之间的隔开。  
+            
+        
+  8. 特殊结构  
+     1. 修饰符  
+            若存在，类和方法的修饰符应该按照以下顺序排列：  
+            ```public protected private abstract static final transient volatile synchronized native strictfp```
+        
+6. 命名  
+   1. 类名  
+       大写打头的驼峰风格  
+
+   2. 方法名  
+       小写打头的驼峰风格  
+       最好以动词，或动宾短语命名  
+       唯一建议使用下划线的地方是在JUnit中用于为多个测试方法进行逻辑分组，一个典型的模式：  
+       ```test<MethodUnderTest>_<state>```，比如：`testPop_emptyStack`  
+缩略词当做单词对待，而不要保持全大写（命名为`getUrl`, 而不是`getURL`）   
+
+   3. 常量名  
+       所有字母大写，单词之间以下划线分割  
+       例如：  
+       ```java  
+       // Constants
+        static final int NUMBER = 5;
+        static final ImmutableList<String> NAMES = ImmutableList.of("Ed", "Ann");
+        static final Joiner COMMA_JOINER = Joiner.on(',');  // because Joiner is immutable
+        static final SomeMutableType[] EMPTY_ARRAY = {};
+        enum SomeEnum { ENUM_CONSTANT }
+
+        // Not constants
+        static String nonFinal = "non-final";
+        final String nonStatic = "non-static";
+        static final Set<String> mutableCollection = new HashSet<String>();
+        static final ImmutableSet<SomeMutableType> mutableElements = ImmutableSet.of(mutable);
+        static final Logger logger = Logger.getLogger(MyClass.getName());
+        static final String[] nonEmptyArray = {"these", "can", "change"};
+        ```
+
+    4. 驼峰规则  
+        如何将英文词汇转换为符合驼峰规则的标识符  
+            Prose form                 Correct              Incorrect
+        "XML HTTP request"        XmlHttpRequest        XMLHTTPRequest
+        "new customer ID"        newCustomerId        newCustomerID
+        "inner stopwatch"        innerStopwatch        innerStopWatch
+        "supports IPv6 on iOS?"    supportsIpv6OnIos    supportsIPv6OnIOS
+        "YouTube importer"        YouTubeImporter
+        YoutubeImporter*
+        
+        可接受但不推荐的情形：  
+        "nonempty"和"non-empty"都是合法的英文单词, 所以checkNonempty和checkNonEmpty都可以认为正确  
+         
+        注意：请命名时一定准备一本英文词典在附近，不要出现基本的英文拼写错误，目前已经发现的案例有：  
+        behaviour/behavor, pool/poll, request/reqeust, continue, external等
+        
+7. 编程实践  
+
+   1. 尽量使用@Override(不管是扩展重写方法还是实现接口)来避免直到运行时才可以发现的错误  
+   例如以下打字错误只有在运行时才能发现  
+   ```
+    public void oncreate(Bundle savedInstanceState) {
+
+    }```
+    而采用以下写法错误在编译时就能被发现  
+    ```
+    @Override
+    public void oncreate(Bundle savedInstanceState) {
+
+    }```
+    
+    2. 不要完全忽略异常，尽管这非常诱人  
+    
+    try {
+      int i = Integer.parseInt(response);
+      return handleNumericResponse(i);
+    } catch (NumberFormatException ok) {
+      // it's not numeric; that's fine, just continue
+    }
+    return handleTextResponse(response);
+    
+    绝对不要这么做。也许你会认为：
+    你的代码永远不会碰到这种出错的情况，或者处理异常并不重要，
+    可类似上述忽略异常的代码将会在代码中埋下一颗地雷，说不定哪天它就会炸到某个人了。
+    你必须在代码中以某种规矩来处理所有的异常。根据情况的不同，处理的方式也会不一样。
+    
+    "无论何时，空的catch语句都会让人感到不寒而栗。
+    虽然很多情况下确实是一切正常，但至少你不得不去忧虑它。在Java中你无法逃离这种恐惧感。"
+                                        -James Gosling
+                                        
+    可接受的替代方案包括（按照推荐顺序）:
+    1) 向方法的调用者抛出异常
+      void setServerPort(String value) throws NumberFormatException {
+
+        serverPort = Integer.parseInt(value);
+
+    }
+    
+    2) 根据抽象级别抛出新的异常
+     void setServerPort(String value) throws ConfigurationException {
+
+        try {
+
+            serverPort = Integer.parseInt(value);
+
+        } catch (NumberFormatException e) {
+
+            throw new ConfigurationException("Port " + value + " is not valid.");
+
+        }
+
+    }
+    
+    3) 默默地处理错误并在catch {}语句块中替换为合适的值
+    
+    void setServerPort(String value) {
+
+        try {
+
+            serverPort = Integer.parseInt(value);
+
+        } catch (NumberFormatException e) {
+
+            serverPort = 80;  // default port for server
+
+        }
+        
+    }
+    
+    4) 捕获异常并抛出一个新的RuntimeException。这种做法比较危险：只有确信发生该错误时最合适的做法就是崩溃，才会这么做
+     void setServerPort(String value) {
+
+        try {
+
+            serverPort = Integer.parseInt(value);
+
+        } catch (NumberFormatException e) {
+
+            throw new RuntimeException("port " + value " is invalid, ", e);
+
+        }
+
+    }
+    
+    5) 如果确信忽略异常比较合适，那就忽略吧，但必须把合理的原因注释出来
+    void setServerPort(String value) {
+
+        try {
+
+            serverPort = Integer.parseInt(value);
+
+        } catch (NumberFormatException e) {
+
+            // Method is documented to just ignore invalid user input.
+
+            // serverPort will just be unchanged.
+
+        }
+
+    }
+
+    例外：在测试用例中一个期望发生的异常  
+    try {
+        emptyStack.pop();
+        fail();
+    } catch (NoSuchElementException expected) {
+    }
+    
+    3. 尽量不要因为想偷懒而要捕获顶级的Exception
+    try {
+
+        someComplicatedIOFunction();        // may throw IOException
+
+        someComplicatedParsingFunction();   // may throw ParsingException
+
+        someComplicatedSecurityFunction();  // may throw SecurityException
+
+                                            // phew, made it all the way
+        
+    } catch (Exception e) {                 // I'll just catch all exceptions
+    
+        handleError();                      // with one generic handler!
+    
+    }
+    
+    不要这么做。绝大部分情况下，捕获顶级的Exception或Throwable都是不合适的，Throwable更不合适，因为它还包含了Error异常。这种捕获非常危险。
+    这意味着本来不必考虑的Exception（包括类似ClassCastException的RuntimeException）被卷入到应用程序级的错误处理中来。
+    这会让代码运行的错误变得模糊不清。这意味着，假如别人在你调用的代码中加入了新的异常，编译器将无法帮助你识别出各种不同的错误类型。
+    绝大部分情况下，无论如何你都不应该用同一种方式来处理各种不同类型的异常。
+    
+    当你执意想这样做：
+    在开始之前，你应该非常仔细地考虑一下，并在注释中解释清楚为什么这么做是安全的
+    
+    比捕获顶级Exception更好的方案：
+
+    分开捕获每一种异常，在一条try语句后面跟随多个catch语句块。
+    这样可能会有点别扭，但总比捕获所有Exception要好些。请小心别在catch语句块中重复执行大量的代码。
+
+    重新组织一下代码，使用多个try块，使错误处理的粒度更细一些。把IO从解析内容的代码中分离出来，根据各自的情况进行单独的错误处理。
+
+    再次抛出异常。很多时候在你这个级别根本就没必要捕获这个异常，只要让方法抛出该异常即可。
+    
+    请建立一个观点：异常是你的朋友！当编译器指出你没有捕获某个异常时，请不要皱眉头。而应该微笑：编译器帮助你找到了代码中的运行时（runtime）问题。
+
+    7.4 静态成员：通过类名来限定  
+    ```
+    Foo aFoo = ...;
+    Foo.aStaticMethod(); // good
+    aFoo.aStaticMethod(); // bad
+    ```
+
+    7.5 永远不要重载finalize方法，除非：  
+    你需要在JNI方法中在Java对象被GC回收时释放native层资源  
+
+    7.6 尽量限制变量的作用域  
+    ```
+    // GOOD
+    if (…) {
+        double d = someCalculation(…);
+        doSomethingWith(d);
+    } else {
+        // No use of d
+    }
+    // BAD
+    double d = 0;
+    if (…) { … } else { … }
+    ```
+    
+    7.7 为临时性/不完美代码使用TODO注释  
+    TODO注释的格式为：
+    // TODO: {your_comments_here}
+    
+    7.8 类和方法前的概述段  
+        名词或动词短语，而不要是一整句话，比如：  
+        ```
+        // BAD
+        A {@code Foo} is a...
+        // BAD too
+        This method returns...
+        ```
+        
+        也不要是一个祈使句：  
+        ```
+        Save the record..
+        ```
+        
+        然而需要注意的是：概述段需要想完整的一句话一样打头字母大写，添加合适的标点等等
+        
+    7.9 每个类和自建的public方法必须包含Javadoc注释，注释至少要包含描述该类或方法用途的语句。并且该语句应该用第三人称的动词形式来开头。
+    
+    7.10 组织方法的原则：
+        1）简短。
+           对方法的代码长度并没有硬性的限制，但通常如果方法代码超过了40行，就该考虑是否可以在不损害程序结构的前提下进行分拆。
+        2) 专注于完成单一功能
+        3) 可重用
+        4) 易于测试
